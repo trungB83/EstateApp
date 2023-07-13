@@ -1,89 +1,74 @@
 import React, { useState } from "react";
-import { FlatList, TouchableOpacity } from "react-native";
-import { View, Text, StyleSheet, TextInput, Dimensions } from "react-native";
-import { Button, Card, Icon } from "react-native-elements";
+import { FlatList } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Card, Header, Icon, SearchBar } from "react-native-elements";
+import { data } from "../db";
+import { HeaderButtons, HeaderButton, Item } from "react-navigation-header-buttons";
+import { Image } from "react-native";
 
-const { width } = Dimensions.get("window");
+const CustomHeaderButton = (props) => (
+  <HeaderButton {...props} IconComponent={Image} iconSize={23} color="#4A4A4A" />
+);
 
-const data = [
-  {
-    id: 1,
-    name: "House 1",
-    address: "123 Main St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house1.png"),
+const SearchScreenOptions = ({ navigation }) => ({
+  headerTitle: () => (
+    <SearchBar
+      placeholder="Search"
+      onChangeText={(text) => handleSearch(text)}
+      onCancel={() => handleClearSearch()}
+      value={searchText}
+      platform="ios"
+      cancelButtonTitle="Cancel"
+      cancelButtonProps={{ buttonTextStyle: { fontWeight: "normal" } }}
+      containerStyle={{ backgroundColor: "#fff" }}
+      inputContainerStyle={{ backgroundColor: "#E5E5E5" }}
+      inputStyle={{ fontSize: 14 }}
+    />
+  ),
+  headerTitleAlign: "center",
+  headerStyle: {
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E5E5",
   },
-  {
-    id: 2,
-    name: "House 2",
-    address: "456 Elm St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house2.png"),
-  },
-  {
-    id: 3,
-    name: "House 3",
-    address: "123 Main St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house1.png"),
-  },
-  {
-    id: 4,
-    name: "House 4",
-    address: "456 Elm St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house2.png"),
-  },
-  {
-    id: 5,
-    name: "House 5",
-    address: "123 Main St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house1.png"),
-  },
-  {
-    id: 6,
-    name: "House 6",
-    address: "456 Elm St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house2.png"),
-  },
-  {
-    id: 7,
-    name: "House 7",
-    address: "123 Main St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house1.png"),
-  },
-  {
-    id: 8,
-    name: "House 8",
-    address: "456 Elm St",
-    date: "19 day ago",
-    price: "$1,259,000",
-    image: require("../images/house2.png"),
-  },
-];
+  headerLeft: () => (
+    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+      <Item
+        title="Profile"
+        iconName={require("../assets/icons/User.png")}
+        onPress={() => console.log("Profile button clicked")}
+      />
+    </HeaderButtons>
+  ),
+  headerRight: () => (
+    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+      <Item
+        title="Add"
+        iconName={require("../assets/icons/Add-new-button.png")}
+        onPress={() => console.log("Add button clicked")}
+      />
+      <Item
+        title="Map"
+        iconName={require("../assets/icons/Map-button.png")}
+        onPress={() => navigation.navigate("Map")}
+      />
+    </HeaderButtons>
+  ),
+});
 
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState(data);
 
-  const handleSearch = () => {
-    if (!searchText.trim()) {
+  const handleSearch = (text) => {
+    setSearchText(text);
+    if (!text.trim()) {
       setSearchResults(data);
       return;
     }
 
     const filteredResults = data.filter((item) =>
-      item.name.toLowerCase().includes(searchText.toLowerCase())
+      item.name.toLowerCase().includes(text.toLowerCase())
     );
     setSearchResults(filteredResults);
   };
@@ -99,6 +84,7 @@ const SearchScreen = () => {
         <View style={styles.imageContainer}>
           <Card.Image source={item.image} style={styles.houseImage} />
         </View>
+
         <View style={styles.textContainer}>
           <Text style={styles.houseName}>{item.name}</Text>
           <Text style={styles.houseDate}>{item.date}</Text>
@@ -113,23 +99,10 @@ const SearchScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <View style={styles.searchIconContainer}>
-          <Icon name="search" type="font-awesome" color="#9B9B9B" size={20} />
-        </View>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search"
-          value={searchText}
-          onChangeText={setSearchText}
-          onSubmitEditing={handleSearch}
-        />
-        {searchText !== "" && (
-          <TouchableOpacity onPress={handleClearSearch}>
-            <Icon name="close" type="font-awesome" color="#9B9B9B" size={20} />
-          </TouchableOpacity>
-        )}
-      </View>
+      <Header
+        {...SearchScreenOptions({ navigation: undefined })}
+        statusBarProps={{ translucent: true }}
+      />
 
       <FlatList
         data={searchResults}
@@ -191,7 +164,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 5,
   },
-
   houseName: {
     fontSize: 16,
     fontWeight: "bold",

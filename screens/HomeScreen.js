@@ -8,49 +8,11 @@ import {
   View,
 } from "react-native";
 import { Button, Icon } from "react-native-elements";
+import { category, data } from "../db";
 
 const HomeScreen = () => {
-  const [houses, setHouses] = useState([
-    {
-      name: "One Mission Bay",
-      address: "San Francisco, CA",
-      image: require("../images/house1.png"),
-      saved: false,
-    },
-    {
-      name: "1410 Steiner St",
-      address: "San Francisco, CA",
-      image: require("../images/house2.png"),
-      saved: false,
-    },
-    {
-      name: "246 Sussex St",
-      address: "San Francisco, CA",
-      image: require("../images/house3.png"),
-      saved: false,
-    },
-    {
-      name: "1206 Market St",
-      address: "San Francisco, CA",
-      image: require("../images/house4.png"),
-      saved: false,
-    },
-  ]);
-
-  const categories = [
-    {
-      name: "House",
-      image: require("../images/house.jpg"),
-    },
-    {
-      name: "Apartment",
-      image: require("../images/apartment.png"),
-    },
-    {
-      name: "Condos",
-      image: require("../images/condos.png"),
-    },
-  ];
+  const [houses, setHouses] = useState(data);
+  const [categories, setCategories] = useState(category)
 
   const handleSave = (index) => {
     const newHouses = [...houses];

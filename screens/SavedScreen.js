@@ -1,60 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
 import { FlatList } from "react-native";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, Icon } from "react-native-elements";
+import { data } from "../db";
 
 const SavedScreen = () => {
-  const [savedHouses, setSavedHouses] = useState([
-    {
-      name: "One Mission Bay",
-      address: "San Francisco, CA",
-      image: require("../images/house1.png"),
-      rating: 4,
-    },
-    {
-      name: "1410 Steiner St",
-      address: "San Francisco, CA",
-      image: require("../images/house2.png"),
-      rating: 3,
-    },
-    {
-      name: "246 Sussex St",
-      address: "San Francisco, CA",
-      image: require("../images/house3.png"),
-      rating: 2,
-    },
-    {
-      name: "1206 Market St",
-      address: "San Francisco, CA",
-      image: require("../images/house4.png"),
-      rating: 1,
-    },
-    {
-      name: "One Mission Bay",
-      address: "San Francisco, CA",
-      image: require("../images/house1.png"),
-      rating: 4,
-    },
-    {
-      name: "1410 Steiner St",
-      address: "San Francisco, CA",
-      image: require("../images/house2.png"),
-      rating: 4,
-    },
-    {
-      name: "246 Sussex St",
-      address: "San Francisco, CA",
-      image: require("../images/house3.png"),
-      rating: 4,
-    },
-    {
-      name: "1206 Market St",
-      address: "San Francisco, CA",
-      image: require("../images/house4.png"),
-      rating: 4,
-    },
-  ]);
+  const [savedHouses, setSavedHouses] = useState([]);
+
+  useEffect(() => {
+    const savedHousesData = data.filter((house) => house.saved);
+    setSavedHouses(savedHousesData);
+  }, []);
 
   const HouseItem = ({ item }) => {
     return (
@@ -72,7 +29,13 @@ const SavedScreen = () => {
         </View>
         <View style={styles.heartButton}>
           <Button
-            icon={<Icon name="heart" type="font-awesome" color="#fff" />}
+            icon={
+              <Icon
+                name="heart"
+                type="font-awesome"
+                color={item.saved ? "#20C065" : "#fff"}
+              />
+            }
             buttonStyle={styles.saveButton}
           />
         </View>
