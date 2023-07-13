@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FlatList,
   Image,
@@ -9,6 +10,33 @@ import {
 import { Button, Icon } from "react-native-elements";
 
 const HomeScreen = () => {
+  const [houses, setHouses] = useState([
+    {
+      name: "One Mission Bay",
+      address: "San Francisco, CA",
+      image: require("../images/house1.png"),
+      saved: false,
+    },
+    {
+      name: "1410 Steiner St",
+      address: "San Francisco, CA",
+      image: require("../images/house2.png"),
+      saved: false,
+    },
+    {
+      name: "246 Sussex St",
+      address: "San Francisco, CA",
+      image: require("../images/house3.png"),
+      saved: false,
+    },
+    {
+      name: "1206 Market St",
+      address: "San Francisco, CA",
+      image: require("../images/house4.png"),
+      saved: false,
+    },
+  ]);
+
   const categories = [
     {
       name: "House",
@@ -24,28 +52,11 @@ const HomeScreen = () => {
     },
   ];
 
-  const houses = [
-    {
-      name: "One Mission Bay",
-      address: "San Francisco, CA",
-      image: require("../images/house1.png"),
-    },
-    {
-      name: "1410 Steiner St",
-      address: "San Francisco, CA",
-      image: require("../images/house2.png"),
-    },
-    {
-      name: "246 Sussex St",
-      address: "San Francisco, CA",
-      image: require("../images/house3.png"),
-    },
-    {
-      name: "1206 Market St",
-      address: "San Francisco, CA",
-      image: require("../images/house4.png"),
-    },
-  ];
+  const handleSave = (index) => {
+    const newHouses = [...houses];
+    newHouses[index].saved = !newHouses[index].saved;
+    setHouses(newHouses);
+  };
 
   const CategoryItem = ({ category }) => {
     return (
@@ -68,11 +79,15 @@ const HomeScreen = () => {
     return <CategoryItem category={item} />;
   };
 
-  const HouseItem = ({ item }) => {
+  const HouseItem = ({ item, index }) => {
     return (
       <View style={styles.houseItem}>
         <View style={styles.houseImageWrapper}>
-          <Image source={item.image} style={styles.houseImage} resizeMode="cover" />
+          <Image
+            source={item.image}
+            style={styles.houseImage}
+            resizeMode="cover"
+          />
         </View>
         <View style={styles.houseInfo}>
           <Text style={styles.houseName}>{item.name}</Text>
@@ -80,8 +95,15 @@ const HomeScreen = () => {
         </View>
         <View style={styles.heartButton}>
           <Button
-            icon={<Icon name="heart" type="font-awesome" color="#fff" />}
+            icon={
+              <Icon
+                name="heart"
+                type="font-awesome"
+                color={item.saved ? "#20C065" : "#fff"}
+              />
+            }
             buttonStyle={styles.saveButton}
+            onPress={() => handleSave(index)}
           />
         </View>
       </View>
@@ -127,7 +149,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor:"white"
+    backgroundColor: "white",
   },
   // Category block
   categoryBlock: {
@@ -222,10 +244,8 @@ const styles = StyleSheet.create({
     right: 5,
   },
   saveButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "transparent",
+    marginLeft: "auto",
   },
   showAllButton: {
     borderRadius: 5,

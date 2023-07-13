@@ -210,10 +210,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
   },
-  saveButton: {
-    backgroundColor: "transparent",
-    marginLeft: "auto",
-  },
 });
 
 export default SearchScreen;
